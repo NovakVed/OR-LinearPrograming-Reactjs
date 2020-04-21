@@ -15,11 +15,15 @@ import './css/index.css';
 
 
 import App from './App';
+import Practice from './Practice';
+import Todo from './Todo';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    {/* <App /> */}
+    <Practice />
+    {/* <Todo /> */}
   </React.StrictMode>,
   document.getElementById('root')
 );
