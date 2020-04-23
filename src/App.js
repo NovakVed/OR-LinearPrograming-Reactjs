@@ -87,7 +87,7 @@ class App extends Component {
     /* Example of end product */
     var solver = require('javascript-lp-solver')
     const model = {
-      "optimize": "capacity",
+      "optimize": "profit",
       "opType": "max",
       "constraints": {
           "wood": {"max": 54},
@@ -97,12 +97,12 @@ class App extends Component {
           "1": {
               "wood": 6,
               "labor": 10,
-              "capacity": 3,
+              "profit": 3,
           },
           "2": {
               "wood": 9,
               "labor": 5,
-              "capacity": 2,
+              "profit": 2,
           }
       }
     }
