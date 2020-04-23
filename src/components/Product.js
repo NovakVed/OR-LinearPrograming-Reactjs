@@ -1,33 +1,40 @@
 import React from 'react';
 
-function Product() {
+function Product(props) {
     return (
         <div>
             <div className="card">
                 <div className="card-body">
-                    <h5 className="card-title">1. Proizvod</h5>
+                    <h5 className="card-title">Dodaj proizvod</h5>
                     <h6 className="card-subtitle mb-2 text-muted">Ispod upišite sve potrebne podatke</h6>
 
                     <div className="form-row">
-                        <div className="form-group col-md-6">
-                            <input type="text" className="form-control" id="formula_1" />
-                            <small id="formula_1" className="form-text text-muted">Primjer upisa x+3y</small>
-                        </div>
                         <div className="form-group col-md-2">
-                            <select id="restriction_1" className="form-control">
-                                <option value="0">Odaberi</option>
-                                <option value="1">=</option>
-                                <option value="2">≤</option>
-                                <option value="3">≥</option>
+                            <input type="text" name="functionX" onChange={props.handleChange} className="form-control" id="functionX" />
+                            <small id="functionHelp" className="form-text text-muted">Primjer upisa: 12</small>
+                        </div>
+                        <h4 id="functionHelp" className="form-text text-muted">X&emsp;</h4>
+                        <h4 id="functionHelp" className="form-text">+&emsp;</h4>
+                        <div className="form-group col-md-2">
+                            <input type="text" name="functionY" onChange={props.handleChange} className="form-control" id="functionY" />
+                            <small id="functionHelp" className="form-text text-muted">Primjer upisa: -8</small>
+                        </div>
+                        <h4 id="functionHelp" className="form-text text-muted">Y&emsp;</h4>
+                        <div className="form-group col-md-2">
+                            <select id="restriction" name="restriction" onChange={props.handleChange} className="form-control">
+                                <option value="">Odaberi</option>
+                                <option value="=">=</option>
+                                <option value="≤">≤</option>
+                                <option value="≥">≥</option>
                             </select>
                         </div>
                         <div className="form-group col-md-4">
-                            <input type="text" className="form-control" id="inputZip" />
-                            <small id="emailHelp" className="form-text text-muted">Primjer upisa 36</small>
+                            <input type="text" name="result" onChange={props.handleChange} className="form-control" id="result" />
+                            <small id="resultHelp" className="form-text text-muted">Primjer upisa: 36</small>
                         </div>
                     </div>
 
-                    <button className="btn btn-danger">Izbriši</button>
+                    <button className="btn btn-primary" onClick={props.addProduct}>Dodaj proizvod</button>
                 </div>
             </div>
             <br></br>
