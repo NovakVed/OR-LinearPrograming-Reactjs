@@ -1,10 +1,12 @@
 import React, {Component} from 'react';
 import {generate} from 'shortid';
 import {solver} from 'javascript-lp-solver';
+import {math} from 'mathjs';
 
 import './css/App.css';
 import Product from './components/Product';
 import Table from './components/Table';
+import Chart from './components/Chart';
 import Navbar from './components/inc/Navbar';
 import Footer from './components/inc/Footer';
 
@@ -19,6 +21,10 @@ class App extends Component {
       functionY: "",
       restriction: "",
       result: "",
+      feasible: "",
+      allAroundResult: 0,
+      dotX: 0,
+      dotY: 0,
       products: []
     }
     this.handleChange = this.handleChange.bind(this)
@@ -31,12 +37,15 @@ class App extends Component {
     this.setState({ 
       [name]: value 
     })
-    console.log(this.state.objectiveX)
-    console.log(this.state.objectiveY)
   }
 
   addProduct(event) {
     event.preventDefault()
+    document.getElementById("functionX").value = ""
+    document.getElementById("functionY").value = ""
+    document.getElementById("restriction").value = ""
+    document.getElementById("result").value = ""
+
     this.setState(prevState => ({
       products: [...prevState.products, 
         {
@@ -47,7 +56,6 @@ class App extends Component {
           result: this.state.result
         }]
     }))
-    console.log(this.state.products)
   }
 
   removeProduct(event) {
@@ -55,61 +63,187 @@ class App extends Component {
   }
 
   /* Function solver */
+  /* All programming logic */
   functionSolver(event) {
     event.preventDefault();
     var solver = require('javascript-lp-solver')
 
-    const object = {
-      "optimize": "capacity",
-      "opType": "max",
-      "constraints": {
-      },
-      "variables": {
 
+
+    /* ------------------------------- */
+    /* ------------------------------- */
+    /* ---------IF IT'S MIN----------- */
+    /* ------------------------------ */
+    /* ------------------------------ */
+
+
+
+
+    if (this.state.objectiveLimitation === "max") {
+      const object = {
+        "optimize": "cost",
+        "opType": "max",
+        "constraints": {
+        },
+        "variables": {
+          "x": {},
+          "y": {}
+        }
       }
+  
+      /* Matrix */
+      /* Requires library math.js */
+      var math = require('mathjs')
+      var matrix = new Array()
+      var transposeMatrix = math.matrix()
+  
+      this.state.products.forEach(element => {
+        matrix.push([element.functionX, element.functionY, element.result])
+      });
+      transposeMatrix = math.transpose(matrix)
+  
+      /* Constraints */
+      const arrayCapacity = new Array();
+      var productName = 1
+      this.state.products.forEach(element => {
+        var restriction = ""
+        if (element.restriction === "=") {
+          restriction = "equal"
+        } else if (element.restriction === "≤") {
+          restriction = "max"
+        } else {
+          restriction = "min"
+        }
+        object.constraints[productName] = {
+          [restriction]: element.result
+        }
+  
+        productName++
+      });
+  
+      /* Variables */
+      object.variables.x["cost"] = this.state.objectiveX
+      object.variables.y["cost"] = this.state.objectiveY
+      for (let index = 0; index < transposeMatrix.length - 1; index++) {
+        var productName = 1
+        if (index === 0) {
+          transposeMatrix[index].forEach(element => {
+            object.variables.x[productName] = element
+            productName++
+          });
+        } 
+        if (index === 1) {
+          transposeMatrix[index].forEach(element => {
+            object.variables.y[productName] = element
+            productName++
+          });
+        }
+      }
+  
+      const result = solver.Solve(object);
+
+      var feasible = "";
+      if (result.feasible){
+        feasible = "da"
+      } else {
+        feasible = "ne"
+      }
+      this.setState({
+        feasible: feasible,
+        allAroundResult: result.result,
+        dotX: result.x,
+        dotY: result.y
+      })
+
+      console.log(result)
+    } else {
+
+
+
+      /* ------------------------------- */
+      /* ------------------------------- */
+      /* ---------IF IT'S MIN----------- */
+      /* ------------------------------ */
+      /* ------------------------------ */
+
+
+
+      
+      const object = {
+        "optimize": "cost",
+        "opType": "min",
+        "constraints": {
+        },
+        "variables": {
+          "x": {},
+          "y": {}
+        }
+      }
+  
+      /* Matrix */
+      /* Requires library math.js */
+      var math = require('mathjs')
+      var matrix = new Array()
+      var transposeMatrix = math.matrix()
+  
+      this.state.products.forEach(element => {
+        matrix.push([element.functionX, element.functionY, element.result])
+      });
+      transposeMatrix = math.transpose(matrix)  
+      /* Constraints */
+      const arrayCapacity = new Array();
+      var productName = 1
+      this.state.products.forEach(element => {
+        var restriction = ""
+        if (element.restriction === "=") {
+          restriction = "equal"
+        } else if (element.restriction === "≤") {
+          restriction = "max"
+        } else {
+          restriction = "min"
+        }
+        object.constraints[productName] = {
+          [restriction]: element.result
+        }
+  
+        productName++
+      });
+  
+      /* Variables */
+      object.variables.x["cost"] = this.state.objectiveX
+      object.variables.y["cost"] = this.state.objectiveY
+      for (let index = 0; index < transposeMatrix.length - 1; index++) {
+        var productName = 1
+        if (index === 0) {
+          transposeMatrix[index].forEach(element => {
+            object.variables.x[productName] = element
+            productName++
+          });
+        } 
+        if (index === 1) {
+          transposeMatrix[index].forEach(element => {
+            object.variables.y[productName] = element
+            productName++
+          });
+        }
+      }
+  
+      const result = solver.Solve(object);
+
+      var feasible = "";
+      if (result.feasible){
+        feasible = "da"
+      } else {
+        feasible = "ne"
+      }
+      this.setState({
+        feasible: feasible,
+        allAroundResult: result.result,
+        dotX: result.x,
+        dotY: result.y
+      })
+      console.log(result)
     }
-
-    const rows = this.state.products.length + 1
-    console.log(this.state.products)
-
-
-
-    this.state.products.forEach(element => {
-      const id = element.id
-      const productName = 1
-      object.constraints = {
-        id: {"max":element.result},
-      }
-      element.
-      productName++
-    });
-
-    /* Example of end product */
-    var solver = require('javascript-lp-solver')
-    const model = {
-      "optimize": "profit",
-      "opType": "max",
-      "constraints": {
-          "wood": {"max": 54},
-          "labor": {"max": 50},
-      },
-      "variables": {
-          "1": {
-              "wood": 6,
-              "labor": 10,
-              "profit": 3,
-          },
-          "2": {
-              "wood": 9,
-              "labor": 5,
-              "profit": 2,
-          }
-      }
-    }
-
-    const result = solver.Solve(model);
-
-    console.log(result)
   }
 
   handleSubmit(event) {
@@ -188,6 +322,20 @@ class App extends Component {
             <br></br>
             <button className="btn btn-primary float-right" onClick={this.functionSolver}>Izračunaj</button>
           </form>
+          <br></br>
+          <br></br>
+          <div className="card">
+            <div className="card-body">
+              <h5 className="card-title">Rješenje</h5>
+              <h6 className="card-subtitle mb-2 text-muted">Pokrenite aplikaciju kako bi vidjeli rješenje</h6>
+              <p className="card-text">Funkcija cilja: {this.state.allAroundResult}</p>
+              <p className="card-text">M({this.state.dotX}, {this.state.dotY})</p>
+              <p className="card-text">Izvediva (da/ne) = {this.state.feasible}</p>
+            </div>
+          </div>
+          <Chart
+              data={this.state}
+            />
         </div>
         <br />
         <br />
