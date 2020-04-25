@@ -5,7 +5,7 @@ function Table(props) {
     <tr key={item.id}>
         <th scope="row">{key + 1}</th>
         <td>{item.functionX}x + {item.functionY}y {item.restriction} {item.result}</td>
-        <td><button className="btn btn-danger">x</button></td>
+        {/* <td><button className="btn btn-danger">x</button></td> */}
         
     </tr>
     )
@@ -24,8 +24,8 @@ function Table(props) {
                 <table className="table table-striped">
                     <thead>
                         <tr>
-                        <th scope="col">Pravac</th>
-                        <th scope="col">Formula</th>
+                            <th scope="col">Pravac</th>
+                            <th scope="col">Formula</th>
                         </tr>
                     </thead>
                     <tbody>

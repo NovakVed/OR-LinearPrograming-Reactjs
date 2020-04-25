@@ -96,26 +96,28 @@ function Chart(props) {
         })
     }
 
+    /* Add data to the existing chart */
+    /* function addData(label, data) {
+        var chart = () => {
+            setChartData({
+                datasets: [{
+                    label: label,
+                    data: data,
+                    borderColor: [random_bg_color()],
+                    borderWidth: 1,
+                    pointBackgroundColor: ['#000', '#00bcd6', '#d300d6'],
+                    pointBorderColor: ['#000', '#00bcd6', '#d300d6'],
+                    fill: false,
+                    tension: 0,
+                    showLine: true
+                }]            
+            });
+        }
+    } */
+
     useEffect(() => {
         chart()
     }, [])
-
-    /* Add data to the existing chart */
-    function addData(label, data) {
-        setChartData({
-            datasets: [{
-                label: label,
-                data: data,
-                borderColor: [random_bg_color()],
-                borderWidth: 1,
-                pointBackgroundColor: ['#000', '#00bcd6', '#d300d6'],
-                pointBorderColor: ['#000', '#00bcd6', '#d300d6'],
-                fill: false,
-                tension: 0,
-                showLine: true
-            }]            
-        });
-    }
 
     function getData(functionX, functionY, result) {
         var data = []
@@ -141,12 +143,24 @@ function Chart(props) {
         return data
     }
 
+    var temp = [{}]
     if (props.data.products.length > 0) {
         for (let index = 0; index < props.data.products.length; index++) {
             const element = props.data.products[index];
             var label = index + 1 + ".pravac"
             
-            addData(label, getData(element.functionX, element.functionY, element.result))
+            temp.push(getData(element.functionX, element.functionY, element.result))
+        }
+    }
+    console.log(temp)
+
+    var counter = 1
+    if (temp.length > 0) {
+        for (let index = 0; index < temp.length; index++) {
+            const element = temp[index];
+            var label = counter + ".pravac"
+            addData(label, element)
+            counter++         
         }
     }
 
