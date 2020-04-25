@@ -34,7 +34,7 @@ function Product(props) {
                         </div>
                     </div>
 
-                    <button className="btn btn-primary" onClick={props.addProduct}>Dodaj proizvod</button>
+                    <button id="addProductButton" className="btn btn-primary" onClick={props.addProduct}>Dodaj proizvod</button>
                 </div>
             </div>
             <br></br>

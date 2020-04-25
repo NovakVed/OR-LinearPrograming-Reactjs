@@ -324,6 +324,11 @@ class App extends Component {
           </form>
           <br></br>
           <br></br>
+          <Chart
+              data={this.state}
+            />
+          <br></br>
+          <br></br>
           <div className="card">
             <div className="card-body">
               <h5 className="card-title">Rješenje</h5>
@@ -333,9 +338,7 @@ class App extends Component {
               <p className="card-text">Izvediva (da/ne) = {this.state.feasible}</p>
             </div>
           </div>
-          <Chart
-              data={this.state}
-            />
+          
         </div>
         <br />
         <br />
