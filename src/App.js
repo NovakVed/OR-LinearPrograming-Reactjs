@@ -6,11 +6,9 @@ import {math} from 'mathjs';
 import './css/App.css';
 import Product from './components/Product';
 import Table from './components/Table';
-/* import Chart from './components/Chart'; */
-import Chart from './components/ChartTest';
 import Navbar from './components/inc/Navbar';
 import Footer from './components/inc/Footer';
-import ChartTest from './components/ChartTest';
+import Chart from './components/Chart';
 
 class App extends Component {
   constructor() {
@@ -63,20 +61,20 @@ class App extends Component {
         }]
     }))
 
-    /* const temp: { id: number, name: string }[] */
-    const temp = new Array({functionX: Number, functionY: Number, result: Number})
+    /* const temp: { functionX: number, functionY: number, result: number }[] */
+    var temp = new Array({ functionX: Number, functionY: Number, result: Number })
     if (this.state.products.length > 0) {
       for (let index = 0; index < this.state.products.length; index++) {
-          temp.push(this.state.products[index])
+        temp.push(this.state.products[index])
       }
     }
 
-    if (temp > 0) {
-      this.addData("1. pravac", (this.getData(temp.functionX, temp.functionY, temp.result)))
+    if (temp == 0) {
+      this.addData("1. pravac", (this.getData(this.state.functionX, this.state.functionY, this.state.result)))
     } else {
-      var element = temp[temp.length - 1];
+      /* var element = temp[temp.length - 1]; */
       var label = temp.length + ".pravac";
-      this.addData(label, (this.getData(element.functionX, element.functionY, element.result)))
+      this.addData(label, (this.getData(this.state.functionX, this.state.functionY, this.state.result)))
     }
   }
 
@@ -103,12 +101,13 @@ class App extends Component {
     return "rgb(" + x + "," + y + "," + z + ")";
   }
 
-  getData(functionX, functionY, result) {
+  /* functionX and functionY are swapped because of the wrong output when drawing graph */
+  getData(functionY, functionX, result) {
     var data = []
     var x = 0
     var y = 0
-    var object1 = {x: 0, y: 0}
-    var object2 = {x: 0, y: 0}
+    var object1 = {x: Number, y: Number}
+    var object2 = {x: Number, y: Number}
 
     x = result / functionY
     y = result / functionX
@@ -158,8 +157,6 @@ addData(label, data) {
     /* ---------IF IT'S MIN----------- */
     /* ------------------------------ */
     /* ------------------------------ */
-
-
 
 
     if (this.state.objectiveLimitation === "max") {
@@ -277,6 +274,7 @@ addData(label, data) {
       this.state.products.forEach(element => {
         matrix.push([element.functionX, element.functionY, element.result])
       });
+
       transposeMatrix = math.transpose(matrix)  
       /* Constraints */
       const arrayCapacity = new Array();
@@ -368,6 +366,7 @@ addData(label, data) {
         <div className="container">
           <h1 className="text-center">Grafička metoda rješavanja problema LP</h1>
           <br />
+          <br />
           <form onSubmit={this.handleSubmit}>
 
             {/* Maximize or Minimize */}
@@ -437,14 +436,14 @@ addData(label, data) {
           {/* <Chart
               data={this.state}
             /> */}
-          <ChartTest chartData={this.state.chartData} />
+          <Chart chartData={this.state.chartData} />
           <br></br>
           <br></br>
           <div className="card">
             <div className="card-body">
               <h5 className="card-title">Rješenje</h5>
               <h6 className="card-subtitle mb-2 text-muted">Pokrenite aplikaciju kako bi vidjeli rješenje</h6>
-              <p className="card-text">Funkcija cilja: {this.state.allAroundResult}</p>
+              <p className="card-text"><strong>Funkcija cilja:</strong> {this.state.allAroundResult}</p>
               <p className="card-text">M({this.state.dotX}, {this.state.dotY})</p>
               <p className="card-text">x = {this.state.dotX}</p>
               <p className="card-text">y = {this.state.dotY}</p>

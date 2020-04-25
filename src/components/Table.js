@@ -13,14 +13,14 @@ function Table(props) {
     if (items.length === 0) {
         return (
             <div>
-                <p><strong>Funkcija cilja</strong> = {props.data.objectiveX}x + {props.data.objectiveY}y -> {props.data.objectiveLimitation} </p>
+                <h3><strong>Funkcija cilja</strong> = {props.data.objectiveX}x + {props.data.objectiveY}y -> {props.data.objectiveLimitation} </h3>
                 <h3 className="text-center">Prazno</h3>
             </div>
         )
     } else {
         return (
             <div>
-                <p><strong>Funkcija cilja</strong> = {props.data.objective}x -> {props.data.objectiveLimitation}y </p>
+                <h3><strong>Funkcija cilja</strong> = {props.data.objectiveX}x + {props.data.objectiveY}y -> {props.data.objectiveLimitation} </h3>
                 <table className="table table-striped">
                     <thead>
                         <tr>
