@@ -399,6 +399,7 @@ addData(label, data) {
                     name="objectiveX" 
                     placeholder="Prva varijabla" 
                     onChange={this.handleChange}
+                    autocomplete="off"
                   />
                 </div>
                 <h4 id="functionHelp" className="form-text text-muted">X&emsp;</h4>
@@ -409,6 +410,7 @@ addData(label, data) {
                     name="objectiveY"  
                     placeholder="Druga varijabla" 
                     onChange={this.handleChange}
+                    autocomplete="off"
                   />
                 </div>
                 <h4 id="functionHelp" className="form-text text-muted">Y&emsp;</h4>

@@ -10,13 +10,13 @@ function Product(props) {
 
                     <div className="form-row">
                         <div className="form-group col-md-2">
-                            <input type="text" name="functionX" onChange={props.handleChange} className="form-control" id="functionX" />
+                            <input type="text" name="functionX" onChange={props.handleChange} autocomplete="off" className="form-control" id="functionX" />
                             <small id="functionHelp" className="form-text text-muted">Primjer upisa: 12</small>
                         </div>
                         <h4 id="functionHelp" className="form-text text-muted">X&emsp;</h4>
                         <h4 id="functionHelp" className="form-text">+&emsp;</h4>
                         <div className="form-group col-md-2">
-                            <input type="text" name="functionY" onChange={props.handleChange} className="form-control" id="functionY" />
+                            <input type="text" name="functionY" onChange={props.handleChange} autocomplete="off" className="form-control" id="functionY" />
                             <small id="functionHelp" className="form-text text-muted">Primjer upisa: -8</small>
                         </div>
                         <h4 id="functionHelp" className="form-text text-muted">Y&emsp;</h4>
@@ -29,7 +29,7 @@ function Product(props) {
                             </select>
                         </div>
                         <div className="form-group col-md-4">
-                            <input type="text" name="result" onChange={props.handleChange} className="form-control" id="result" />
+                            <input type="text" name="result" onChange={props.handleChange} autocomplete="off" className="form-control" id="result" />
                             <small id="resultHelp" className="form-text text-muted">Primjer upisa: 36</small>
                         </div>
                     </div>
