@@ -124,22 +124,22 @@ class App extends Component {
 
     data.push(object2)
     return data
-}
+  }
 
-/* Add data to the existing chart */
-addData(label, data) {
-  this.state.chartData.datasets.push(
-    {
-      label: label,
-      data: data,
-      borderColor: [this.random_bg_color()],
-      borderWidth: 1,
-      pointBackgroundColor: ['#000', '#00bcd6', '#d300d6'],
-      pointBorderColor: ['#000', '#00bcd6', '#d300d6'],
-      fill: false,
-      tension: 0,
-      showLine: true
-    })
+  /* Add data to the existing chart */
+  addData(label, data) {
+    this.state.chartData.datasets.push(
+      {
+        label: label,
+        data: data,
+        borderColor: [this.random_bg_color()],
+        borderWidth: 1,
+        pointBackgroundColor: ['#000', '#00bcd6', '#d300d6'],
+        pointBorderColor: ['#000', '#00bcd6', '#d300d6'],
+        fill: false,
+        tension: 0,
+        showLine: true
+      })
   }
 
 
@@ -399,7 +399,7 @@ addData(label, data) {
                     name="objectiveX" 
                     placeholder="Prva varijabla" 
                     onChange={this.handleChange}
-                    autocomplete="off"
+                    autoComplete="off"
                   />
                 </div>
                 <h4 id="functionHelp" className="form-text text-muted">X&emsp;</h4>
@@ -410,7 +410,7 @@ addData(label, data) {
                     name="objectiveY"  
                     placeholder="Druga varijabla" 
                     onChange={this.handleChange}
-                    autocomplete="off"
+                    autoComplete="off"
                   />
                 </div>
                 <h4 id="functionHelp" className="form-text text-muted">Y&emsp;</h4>
@@ -431,6 +431,7 @@ addData(label, data) {
 
             <br></br>
             <br></br>
+            <button className="btn btn-danger">Reset</button>
             <button className="btn btn-primary float-right" onClick={this.functionSolver}>Izračunaj</button>
           </form>
           <br></br>
