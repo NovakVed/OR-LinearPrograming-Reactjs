@@ -28,7 +28,8 @@ class App extends Component {
       products: [],
       chartData: {
         datasets:[]
-      }
+      },
+      chartOpts: {}
     }
     this.handleChange = this.handleChange.bind(this)
     this.addProduct = this.addProduct.bind(this)
@@ -101,28 +102,67 @@ class App extends Component {
     return "rgb(" + x + "," + y + "," + z + ")";
   }
 
+  /* function to get value of x */
+  getDataFunctionX(functionX, functionY, result, number) {
+    var x = 0
+    x = (result - (functionY*number))/functionX
+    return x;
+  }
+
+  /* function to get value of y */
+  getDataFunctionY(functionX, functionY, result, number) {
+    var y = 0
+    y = (result - (functionX*number))/functionY
+    return y;
+  }
+
   /* functionX and functionY are swapped because of the wrong output when drawing graph */
+  /* Gets line values in form of an object*/
   getData(functionY, functionX, result) {
     var data = []
-    var x = 0
-    var y = 0
+    /* var x = 0
+    var y = 0 */
     var object1 = {x: Number, y: Number}
     var object2 = {x: Number, y: Number}
+    var object3 = {x: Number, y: Number}
+    var object4 = {x: Number, y: Number}
+    var object5 = {x: Number, y: Number}
+    var object6 = {x: Number, y: Number}
 
-    x = result / functionY
-    y = result / functionX
+    /* x = result / functionY
+    y = result / functionX */
 
     /* For x = 0 */
     object1.x = 0
-    object1.y = y
+    object1.y = this.getDataFunctionX(functionX, functionY, result, 0)
 
     data.push(object1)
 
     /* For y = 0 */
-    object2.x = x
+    object2.x = this.getDataFunctionY(functionX, functionY, result, 0)
     object2.y = 0
 
     data.push(object2)
+
+    /* For x = 1 */
+    object3.x = 1
+    object3.y = this.getDataFunctionX(functionX, functionY, result, 1)
+
+    data.push(object3)
+
+    /* For y = 1 */
+    object4.x = this.getDataFunctionY(functionX, functionY, result, 1)
+    object4.y = 1
+
+    data.push(object4)
+
+    /* For x = -1 */
+    /* For y = -1 */
+    /* For x = 2 */
+    /* For y = 2 */
+    /* For x = -2 */
+    /* For y = -2 */
+    
     return data
   }
 
@@ -439,7 +479,7 @@ class App extends Component {
           {/* <Chart
               data={this.state}
             /> */}
-          <Chart chartData={this.state.chartData} />
+          <Chart chartData={this.state.chartData} chartOpts={this.state.chartOpts}/>
           <br></br>
           <br></br>
           <div className="card">

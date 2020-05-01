@@ -1,13 +1,14 @@
 import React, { Component, useState, useEffect } from 'react';
 import * as chartjs from 'chart.js';
-import {Scatter} from 'react-chartjs-2'
-import 'chartjs-plugin-annotation';
+import {Line, Scatter} from 'react-chartjs-2'
+import * as ChartAnnotation from 'chartjs-plugin-annotation';
 
 class Chart extends Component {
     constructor(props){
         super(props)
         this.state = {
-            chartData: props.chartData
+            chartData: props.chartData,
+            chartOpts: props.chartOpts
         }
     }
 
@@ -15,7 +16,9 @@ class Chart extends Component {
         return (
             <div className="chart">
                 <Scatter data={this.state.chartData}
-                options = {{}}/>
+                options={this.state.chartOpts} 
+                plugins={[ChartAnnotation]}
+                />
             </div>
         )
     }
