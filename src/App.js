@@ -177,7 +177,9 @@ class App extends Component {
         pointBackgroundColor: ['#000', '#00bcd6', '#d300d6'],
         pointBorderColor: ['#000', '#00bcd6', '#d300d6'],
         fill: false,
+        lineTension: 0,
         tension: 0,
+        spanGaps: true,
         showLine: true
       })
   }
