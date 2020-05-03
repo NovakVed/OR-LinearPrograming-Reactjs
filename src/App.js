@@ -29,7 +29,42 @@ class App extends Component {
       chartData: {
         datasets:[]
       },
-      chartOpts: {}
+      chartOpts: {
+        responsive: true,
+        title: {
+          display: true,
+          position: "top",
+          text: "Grafički prikaz",
+          fontSize: 18,
+          fontColor: "#111"
+        },
+        legend: {
+          display: true,
+          position: "bottom",
+          labels: {
+            fontColor: "#333",
+            fontSize: 16
+          }
+        },
+        scales: {
+          yAxes: [{
+              type: 'linear',
+              ticks: {
+                beginAtZero : true,
+                /* max: 10,
+                min: 0 */
+            }
+          }],
+          xAxes: [{
+            type: 'linear',
+              ticks: {
+                beginAtZero : true,
+                /* max: 10,
+                min: 0 */
+            }
+          }]
+      }
+      }
     }
     this.handleChange = this.handleChange.bind(this)
     this.addProduct = this.addProduct.bind(this)
@@ -71,11 +106,11 @@ class App extends Component {
     }
 
     if (temp == 0) {
-      this.addData("1. pravac", (this.getData(this.state.functionX, this.state.functionY, this.state.result)))
+      this.addData("1. pravac", (this.getData(this.state.functionX, this.state.functionY, this.state.result)), this.fillValueRestriction())
     } else {
       /* var element = temp[temp.length - 1]; */
       var label = temp.length + ".pravac";
-      this.addData(label, (this.getData(this.state.functionX, this.state.functionY, this.state.result)))
+      this.addData(label, (this.getData(this.state.functionX, this.state.functionY, this.state.result)), this.fillValueRestriction())
     }
   }
 
@@ -107,6 +142,16 @@ class App extends Component {
     var x = 0
     x = (result - (functionY*number))/functionX
     return x;
+  }
+
+  fillValueRestriction()  {
+    if (this.state.restriction === "=") {
+      return "false"
+    } else if (this.state.restriction === "≤") {
+      return "bottom"
+    } else {
+      return "top"
+    }
   }
 
   /* function to get value of y */
@@ -148,13 +193,13 @@ class App extends Component {
     object3.x = 1
     object3.y = this.getDataFunctionX(functionX, functionY, result, 1)
 
-    data.push(object3)
+    /* data.push(object3) */
 
     /* For y = 1 */
     object4.x = this.getDataFunctionY(functionX, functionY, result, 1)
     object4.y = 1
 
-    data.push(object4)
+    /* data.push(object4) */
 
     /* For x = -1 */
     /* For y = -1 */
@@ -167,20 +212,20 @@ class App extends Component {
   }
 
   /* Add data to the existing chart */
-  addData(label, data) {
+  addData(label, data, fill) {
     this.state.chartData.datasets.push(
       {
         label: label,
         data: data,
         borderColor: [this.random_bg_color()],
         borderWidth: 1,
-        pointBackgroundColor: ['#000', '#00bcd6', '#d300d6'],
+        pointBackgroundColor: ['#000', '#00bcd6', '#d300d6'], 
         pointBorderColor: ['#000', '#00bcd6', '#d300d6'],
-        fill: false,
+        fill: fill,
         lineTension: 0,
-        tension: 0,
-        spanGaps: true,
-        showLine: true
+        /* tension: 0, */
+        spanGaps: true/* ,
+        showLine: true */
       })
   }
 
@@ -486,7 +531,7 @@ class App extends Component {
           <br></br>
           <div className="card">
             <div className="card-body">
-              <h5 className="card-title">Rješenje</h5>
+              <h2 className="card-title">Rješenje</h2>
               <h6 className="card-subtitle mb-2 text-muted">Pokrenite aplikaciju kako bi vidjeli rješenje</h6>
               <p className="card-text"><strong>Funkcija cilja:</strong> {this.state.allAroundResult}</p>
               <p className="card-text">M({this.state.dotX}, {this.state.dotY})</p>

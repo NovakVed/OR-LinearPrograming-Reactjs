@@ -15,7 +15,7 @@ class Chart extends Component {
     render() {
         return (
             <div className="chart">
-                <Scatter data={this.state.chartData}
+                <Line data={this.state.chartData}
                 options={this.state.chartOpts} 
                 plugins={[ChartAnnotation]}
                 />
