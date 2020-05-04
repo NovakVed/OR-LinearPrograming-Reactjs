@@ -218,7 +218,7 @@ class App extends Component {
         label: label,
         data: data,
         borderColor: [this.random_bg_color()],
-        borderWidth: 1,
+        /* borderWidth: 1, */
         pointBackgroundColor: ['#000', '#00bcd6', '#d300d6'], 
         pointBorderColor: ['#000', '#00bcd6', '#d300d6'],
         fill: fill,
