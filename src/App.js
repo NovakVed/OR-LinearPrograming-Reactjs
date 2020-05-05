@@ -21,50 +21,14 @@ class App extends Component {
       functionY: "",
       restriction: "",
       result: "",
-      feasible: "",
-      allAroundResult: 0,
-      dotX: 0,
-      dotY: 0,
+      feasible: false,
+      bounded: false,
+      allAroundResult: "",
+      dotX: "",
+      dotY: "",
       products: [],
-      chartData: {
-        datasets:[]
-      },
-      chartOpts: {
-        responsive: true,
-        title: {
-          display: true,
-          position: "top",
-          text: "Grafički prikaz",
-          fontSize: 18,
-          fontColor: "#111"
-        },
-        legend: {
-          display: true,
-          position: "bottom",
-          labels: {
-            fontColor: "#333",
-            fontSize: 16
-          }
-        },
-        scales: {
-          yAxes: [{
-              type: 'linear',
-              ticks: {
-                beginAtZero : true,
-                /* max: 10,
-                min: 0 */
-            }
-          }],
-          xAxes: [{
-            type: 'linear',
-              ticks: {
-                beginAtZero : true,
-                /* max: 10,
-                min: 0 */
-            }
-          }]
-      }
-      }
+      jxgboard: [],
+      boundingbox: [-1, 21, 21, -1]
     }
     this.handleChange = this.handleChange.bind(this)
     this.addProduct = this.addProduct.bind(this)
@@ -105,13 +69,7 @@ class App extends Component {
       }
     }
 
-    if (temp == 0) {
-      this.addData("1. pravac", (this.getData(this.state.functionX, this.state.functionY, this.state.result)), this.fillValueRestriction())
-    } else {
-      /* var element = temp[temp.length - 1]; */
-      var label = temp.length + ".pravac";
-      this.addData(label, (this.getData(this.state.functionX, this.state.functionY, this.state.result)), this.fillValueRestriction())
-    }
+    this.getData(this.state.functionX, this.state.functionY, this.state.result)
   }
 
   removeProduct(event) {
@@ -124,18 +82,6 @@ class App extends Component {
     /* ------------------------------- */
     /* ------------------------------ */
 
-    /*  */
-  /* componentWillMount(){
-    this.getChartData()
-  } */
-
-  /* Random number generator */
-  random_bg_color() {
-    var x = Math.floor(Math.random() * 256);
-    var y = Math.floor(Math.random() * 256);
-    var z = Math.floor(Math.random() * 256);
-    return "rgb(" + x + "," + y + "," + z + ")";
-  }
 
   /* function to get value of x */
   getDataFunctionX(functionX, functionY, result, number) {
@@ -164,71 +110,62 @@ class App extends Component {
   /* functionX and functionY are swapped because of the wrong output when drawing graph */
   /* Gets line values in form of an object*/
   getData(functionY, functionX, result) {
-    var data = []
-    /* var x = 0
-    var y = 0 */
-    var object1 = {x: Number, y: Number}
-    var object2 = {x: Number, y: Number}
-    var object3 = {x: Number, y: Number}
-    var object4 = {x: Number, y: Number}
-    var object5 = {x: Number, y: Number}
-    var object6 = {x: Number, y: Number}
+    let x = 0
+    let y = 0
 
-    /* x = result / functionY
-    y = result / functionX */
+    /* Ako x i y != 0 */
+    if (functionX != 0 && functionY != 0) {
+      /* Ako rezultat != 0 */
+      if (result != 0) {
+        /* For x = 0 */
+        x = 0
+        y = this.getDataFunctionX(functionX, functionY, result, 0)
 
-    /* For x = 0 */
-    object1.x = 0
-    object1.y = this.getDataFunctionX(functionX, functionY, result, 0)
+        this.state.jxgboard.push([x, y])
 
-    data.push(object1)
+        /* For y = 0 */
+        x = this.getDataFunctionY(functionX, functionY, result, 0)
+        y = 0
 
-    /* For y = 0 */
-    object2.x = this.getDataFunctionY(functionX, functionY, result, 0)
-    object2.y = 0
+        this.state.jxgboard.push([x, y])
+      } else {
+        if (functionX < 0 && functionY > 0 ) {
+          this.state.jxgboard.push([0, 0])
+          this.state.jxgboard.push([1, 1])
+        } else if ( functionX > 0 && functionY < 0 ){
+          this.state.jxgboard.push([0, 0])
+          this.state.jxgboard.push([1, 1])
+        } else {
+          this.state.jxgboard.push([0, 0])
+          this.state.jxgboard.push([-1, 1])
+        }
+      }
+    } else {
+      if (this.state.functionX != 0) {
+        /* Za y = 0 */
+        x = result / this.state.functionX
+        y = 0
 
-    data.push(object2)
+        this.state.jxgboard.push([x, y])
+        /* Za y = 1 */
+        x = result / this.state.functionX
+        y = 1
 
-    /* For x = 1 */
-    object3.x = 1
-    object3.y = this.getDataFunctionX(functionX, functionY, result, 1)
+        this.state.jxgboard.push([x, y])
+      } else if (this.state.functionY != 0){
+        /* Za x = 0 */
+        x = 0
+        y = result / this.state.functionY
 
-    /* data.push(object3) */
+        this.state.jxgboard.push([x, y])
+        /* Za x = 1 */
+        x = 1
+        y = result / this.state.functionY
 
-    /* For y = 1 */
-    object4.x = this.getDataFunctionY(functionX, functionY, result, 1)
-    object4.y = 1
-
-    /* data.push(object4) */
-
-    /* For x = -1 */
-    /* For y = -1 */
-    /* For x = 2 */
-    /* For y = 2 */
-    /* For x = -2 */
-    /* For y = -2 */
-    
-    return data
+        this.state.jxgboard.push([x, y])
+      }
+    }
   }
-
-  /* Add data to the existing chart */
-  addData(label, data, fill) {
-    this.state.chartData.datasets.push(
-      {
-        label: label,
-        data: data,
-        borderColor: [this.random_bg_color()],
-        /* borderWidth: 1, */
-        pointBackgroundColor: ['#000', '#00bcd6', '#d300d6'], 
-        pointBorderColor: ['#000', '#00bcd6', '#d300d6'],
-        fill: fill,
-        lineTension: 0,
-        /* tension: 0, */
-        spanGaps: true/* ,
-        showLine: true */
-      })
-  }
-
 
 
   /* Function solver */
@@ -309,23 +246,13 @@ class App extends Component {
   
       const result = solver.Solve(object);
 
-      var feasible = "";
-      if (result.feasible){
-        feasible = "da"
-      } else {
-        feasible = "ne"
-      }
-
       this.setState({
-        feasible: feasible,
+        feasible: result.feasible,
+        bounded: result.bounded,
         allAroundResult: result.result,
         dotX: result.x,
         dotY: result.y
       })
-
-      var label = "M(" + result.x + ", " + result.y + ")"
-      var data = [{x: this.isUndefinedDotX(result.x), y: this.isUndefinedDotY(result.y)}]
-      this.addData(label, data)
 
       console.log(result)
     } else {
@@ -403,22 +330,13 @@ class App extends Component {
   
       const result = solver.Solve(object);
 
-      var feasible = "";
-      if (result.feasible){
-        feasible = "da"
-      } else {
-        feasible = "ne"
-      }
       this.setState({
-        feasible: feasible,
+        feasible: result.feasible,
+        bounded: result.bounded,
         allAroundResult: result.result,
         dotX: result.x,
         dotY: result.y
       })
-
-      var label = "M(" + result.x + ", " + result.y + ")"
-      var data = [{x: this.isUndefinedDotX(result.x), y: this.isUndefinedDotY(result.y)}]
-      this.addData(label, data)
 
       console.log(result)
     }
@@ -426,7 +344,11 @@ class App extends Component {
 
 
   isUndefinedDotX(x) {
-    if (x === 'undefined') {
+    if (typeof x == "undefined") {
+      return 0
+    } else if(x == "") {
+      return 0
+    } else if(this.state.allAroundResult == "-0") {
       return 0
     } else {
       return x
@@ -434,16 +356,62 @@ class App extends Component {
   }
 
   isUndefinedDotY(y) {
-    if (y === 'undefined') {
+    if (typeof y == "undefined") {
+      return 0
+    } else if(y == "") {
+      return 0
+    } else if(this.state.allAroundResult == "-0") {
       return 0
     } else {
-      return y
+      return y      
     }
   }
 
-  handleSubmit(event) {
-    
+  outputResult() {
+    if (this.state.allAroundResult == "Infinity") {
+      return "Beskonačno"
+    } else if (this.state.allAroundResult == "-0") {
+      return "Ne postoji moguče rješenje za ovaj problem"
+    } else if (this.state.allAroundResult == "0") {
+      return "Ne postoji moguče rješenje za ovaj problem"
+    } else {
+      return this.state.allAroundResult
+    }
   }
+
+  feasibleResult() {
+    if (this.state.feasible) {
+      return "da"
+    } else {
+      return "ne"
+    }
+  }
+
+  boundedResult() {
+    if (this.state.bounded) {
+      return "ograničen"
+    } else {
+      return "nije ograničen"
+    }
+  }
+
+  explanation() {
+    if (this.state.feasible === true && this.state.bounded === true) {
+      return "Zajednički prostor rješenja je ograničeno, te rješenje je optimalno"
+    } else if (this.state.allAroundResult == "-0") {
+      return "Ne postoji moguče rješenje za ovaj problem"
+    } else if (this.state.feasible  === true && this.state.bounded === false) {
+      return "Zajednički prostor rješenja nije ograničeno, ali je izvedivo"
+    } else if (this.state.feasible  === false && this.state.bounded === true) {
+      return "Zajednički prostor rješenja je ograničeno, ali rješenje nikad nije optimalno"
+    } else if (typeof this.state.dotX  == "undefined" && typeof this.state.dotY == "undefined") {
+      return "Rješenje postoji, ali nikad nije optimalno, (0, 0) nikad nije optimalno, jer tada tvornica posluje kao da nikada ne proizvodi, što nikada ne može biti optimalni odgovor"
+    } else {
+      return "Rješenje ne postoji!"
+    }
+  }
+
+
 
   render() {
     return (
@@ -523,21 +491,30 @@ class App extends Component {
           </form>
           <br></br>
           <br></br>
-          {/* <Chart
-              data={this.state}
-            /> */}
-          <Chart chartData={this.state.chartData} chartOpts={this.state.chartOpts}/>
+          <br></br>
+          <p className="card-subtitle mb-2 text-muted">U slučaju da ne možete vidjeti upisane pravce, koristite opciju zoomiranja na grafu dok ne možete vidjeti vaše pravce</p>
+          <br></br>
+          <Chart key={generate()} jxgboard={this.state.jxgboard} boundingbox={this.state.boundingbox}/>
           <br></br>
           <br></br>
           <div className="card">
             <div className="card-body">
               <h2 className="card-title">Rješenje</h2>
               <h6 className="card-subtitle mb-2 text-muted">Pokrenite aplikaciju kako bi vidjeli rješenje</h6>
-              <p className="card-text"><strong>Funkcija cilja:</strong> {this.state.allAroundResult}</p>
-              <p className="card-text">M({this.state.dotX}, {this.state.dotY})</p>
-              <p className="card-text">x = {this.state.dotX}</p>
-              <p className="card-text">y = {this.state.dotY}</p>
-              <p className="card-text">Izvediva (da/ne) = {this.state.feasible}</p>
+              <p className="card-text"><strong>Funkcija cilja:</strong> {this.outputResult()}</p>
+              <p className="card-text">M({this.isUndefinedDotX(this.state.dotX)}, {this.isUndefinedDotY(this.state.dotY)})</p>
+              <p className="card-text">x = {this.isUndefinedDotX(this.state.dotX)}</p>
+              <p className="card-text">y = {this.isUndefinedDotY(this.state.dotY)}</p>
+              <p className="card-text">Izvediva (da/ne) = {this.feasibleResult()}</p>
+              <p className="card-text">Zajedničko područje rješenja (ograničeno/nije ograničeno) = {this.boundedResult()}</p>
+            </div>
+          </div>
+          <br></br>
+          <br></br>
+          <div className="card">
+            <div className="card-body">
+              <h2 className="card-title">Objašnjenje</h2>
+              <p className="card-text">{this.explanation()}</p>
             </div>
           </div>
           
