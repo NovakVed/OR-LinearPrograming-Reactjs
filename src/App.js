@@ -374,6 +374,8 @@ class App extends Component {
       return "Ne postoji moguče rješenje za ovaj problem"
     } else if (this.state.allAroundResult == "0") {
       return "Ne postoji moguče rješenje za ovaj problem"
+    } else if (this.state.allAroundResult < 0) {
+      return "Beskonačno"
     } else {
       return this.state.allAroundResult
     }
@@ -397,6 +399,9 @@ class App extends Component {
 
   explanation() {
     if (this.state.feasible === true && this.state.bounded === true) {
+      if (this.state.allAroundResult < 0) {
+        return "Postoji multiplicitet optimalnih rješenja (beskonačno mnogo rješenja)"
+      }
       return "Zajednički prostor rješenja je ograničeno, te rješenje je optimalno"
     } else if (this.state.allAroundResult == "-0") {
       return "Ne postoji moguče rješenje za ovaj problem"
